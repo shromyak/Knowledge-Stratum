@@ -30,9 +30,10 @@ illustration (Section 7).
   dependencies, `available_at` temporal constraints, contradiction
   rules.
 - **Run pipeline** (`src/engine.py`): candidate generation restricted to
-  `rev_id ∈ M_B`; run journal; a deterministic `TemplateGenerator`
-  (replaceable by a real model); claim verification (identifier check +
-  a semantic-support stand-in for an entailment/verifier pass).
+  `rev_id ∈ M_B`; run journal; a deterministic `TemplateGenerator` or a
+  real LLM (`src/llm.py`, `src/run_llm.py`); claim verification
+  (identifier check + a semantic-support stand-in for an
+  entailment/verifier pass).
 - **A5-lite carrier** (`src/asof_store.py`): the manifest persisted as
   SQLite rows — the git-commit analogue of DVC/LakeFS per the article's
   framing.
@@ -45,6 +46,58 @@ illustration (Section 7).
 cd prototype
 python3 src/run_all.py        # full run: corpora -> checks -> A4/A5 -> parity
 python3 tests/test_smoke.py   # tests (no dependencies)
+```
+
+### Running with a real LLM
+
+`src/run_llm.py` replaces `TemplateGenerator` with a live model. The
+model sees only the admissible fragments (candidate generation is still
+restricted to `rev_id ∈ M_B`); it must cite revision ids, and any
+citation outside membership is flagged `MEMBERSHIP_VIOLATION` in the
+journal — `model_id`, output, citations, and flags are all recorded.
+
+```bash
+# LM Studio (server at localhost:1234, OpenAI-compatible):
+OPENAI_BASE_URL=http://localhost:1234/v1 OPENAI_API_KEY=lm-studio \
+  python3 src/run_llm.py openai:openai/gpt-oss-20b
+# any loaded LM Studio model id works, e.g.
+#   openai:meta-llama-3.1-8b-instruct
+
+# Ollama (server at localhost:11434):
+python3 src/run_llm.py ollama:llama3.2
+
+# OpenAI or another OpenAI-compatible provider:
+OPENAI_API_KEY=sk-... python3 src/run_llm.py openai:gpt-4o-mini
+
+# Strategy Validator corpus:
+python3 src/run_llm.py openai:openai/gpt-oss-20b --corpus sv
+```
+
+Journal -> `runs/{req,sv}_llm.jsonl`; the same gold evaluation and
+Table 6 metrics are printed.
+
+### ECT-QA pilot (external benchmark, A2 vs A3)
+
+`src/run_ectqa.py` downloads a sample of `austinmyc/ECT-QA` (plain
+JSON from Hugging Face) and compares an as-of temporal slice (A2) with
+admissible-window retrieval (A3): correctness vs gold, inadmissible-doc
+usage, citation violations. Journal -> `runs/ectqa_llm.jsonl`.
+
+```bash
+OPENAI_BASE_URL=http://localhost:1234/v1 OPENAI_API_KEY=lm-studio \
+  python3 src/run_ectqa.py openai:openai/gpt-oss-20b \
+  [--n-ans 20] [--n-unans 10] [--k 4]
+```
+
+`src/run_adqab.py` does the same A2/A3 comparison on a second
+benchmark, `kwunhang/TA-RAG` DQABench (27k dated news docs, MCQA
+questions with `plot_time_bounds`; deterministic letter grading).
+Journal -> `runs/adqab_llm.jsonl`.
+
+```bash
+OPENAI_BASE_URL=http://localhost:1234/v1 OPENAI_API_KEY=lm-studio \
+  python3 src/run_adqab.py openai:openai/gpt-oss-20b \
+  [--n 30] [--k 6] [--seed 11]
 ```
 
 Artifacts:
@@ -71,8 +124,12 @@ Artifacts:
 ## Limitations (stated openly)
 
 - `TemplateGenerator` is deterministic; it demonstrates audit
-  mechanics, not LLM behavior. Testing hypothesis H2 requires a run
-  with a real model.
+  mechanics, not LLM behavior. `src/run_llm.py` runs a real model
+  through the same journal/metrics path (LM Studio `gpt-oss-20b`
+  reached fact_correctness 1.0 on the 10-query req suite; llama3.2:3B
+  over-abstains at 0.4 — small-model citation discipline, not an
+  enforcement difference). LLM runs measure the pipeline's audit
+  mechanics end-to-end; they do not by themselves test H2.
 - Semantic claim verification is a stand-in (substring /
   edge-existence); the hook for an NLI/self-critique verifier is
   `engine.verify_claims`.
