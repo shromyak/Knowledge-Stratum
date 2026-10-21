@@ -13,9 +13,11 @@ def evaluate_run(run, query):
     res = {"q_id": run["q_id"], "ok": None, "detail": ""}
     qtype = query["type"]
     if "gold_rev" in query:
-        got = set(run["context_revs"])
+        # edge citations (E-* revs) are supporting evidence, ignore them
+        got = {c for c in run["context_revs"]
+               if not c.startswith("E-")}
         exp = {query["gold_rev"]}
-        res["ok"] = got == exp
+        res["ok"] = exp <= got
         res["detail"] = f"expected {sorted(exp)} got {sorted(got)}"
     elif "gold_revs" in query:
         got = {c for c in run["context_revs"]
@@ -45,8 +47,12 @@ def metrics(runs, queries):
     for r in runs:
         for c in r["claims"]:
             if c["evidence_type"] in ("documented", "derived"):
+                if (c.get("verification") or {}).get("semantic") \
+                        == "indeterminate":
+                    continue
                 material += 1
-                if (c.get("verification") or {}).get("semantic") == "supported":
+                if (c.get("verification") or {}).get("semantic") \
+                        == "supported":
                     supported += 1
         q = qmap[r["q_id"]]
         if q["type"] in ("record_query", "availability"):

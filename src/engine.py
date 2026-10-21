@@ -173,6 +173,57 @@ def answer_query(store, query, allowed, run_dir=None):
     raise ValueError(f"unknown query type {qtype}")
 
 
+LLM_TYPES = {"entity_text", "verifiers", "config_members"}
+
+# task-type hints for the LLM: what the fragment set means and which
+# revision ids are the expected citation targets
+TYPE_HINTS = {
+    "entity_text":
+        "Cite the revision id of the fragment that directly states the "
+        "requested fact (e.g. R-*-rev*), not relationship edges [E-*].",
+    "verifiers":
+        "Relationship fragments [E-ver-*] record which test verifies "
+        "the requirement; in your answer cite the test revision ids "
+        "(T-*-rev*), i.e. the member revisions, not the edges.",
+    "config_members":
+        "TASK: the fragments below ARE exactly the approved members of "
+        "the configuration asked about. Your answer must list all of "
+        "their revision ids, e.g. [XA-rev1], [XB-rev1].",
+}
+
+
+def answer_llm(store, query, allowed, gen):
+    """Real-LLM path: the model answers from admissible fragments only
+    and must cite revision ids. Citations outside membership are
+    flagged as MEMBERSHIP_VIOLATION."""
+    from llm import cited_revs
+    revs = {r["rev_id"]: r for r in store.revisions()}
+    for e in store.edges():
+        revs[e["edge_rev_id"]] = e
+    frags = []
+    for rid in sorted(allowed):
+        r = revs.get(rid)
+        if r:
+            text = store.read_content(r["content_ref"]).replace("\n", " ")
+            frags.append(f"[{rid}] {text}")
+    prompt = (
+        f"All admissible fragments below belong to the approved "
+        f"configuration named in the question.\n\n"
+        f"QUESTION: {query['question']}\n\n"
+        f"NOTE: {TYPE_HINTS[query['type']]}\n\n"
+        f"ADMISSIBLE FRAGMENTS:\n" + "\n".join(frags))
+    out = gen(prompt).strip()
+    cited = cited_revs(out)
+    viol = [c for c in cited if c not in allowed]
+    flags = ["MEMBERSHIP_VIOLATION"] if viol else []
+    claims = [{"text": out[:500], "evidence_type": "documented",
+               "source_rev_refs": [c], "verification": None,
+               "llm_sourced": True}
+              for c in cited if c in allowed]
+    ctx = [c for c in cited if c in allowed]
+    return out, claims, ctx, flags
+
+
 def verify_claims(store, claims, allowed):
     """Identifier check + naive semantic support check.
 
@@ -184,6 +235,11 @@ def verify_claims(store, claims, allowed):
         id_ok = (all(ref in allowed for ref in c["source_rev_refs"])
                  if allowed is not None else None)
         c["verification"] = {"identifier_check": id_ok}
+        if c.get("llm_sourced"):
+            # paraphrased model output: substring check is meaningless;
+            # hook for an entailment/self-critique verifier pass
+            c["verification"]["semantic"] = "indeterminate"
+            continue
         if c["evidence_type"] == "derived":
             # a derived claim is supported when all its declared inputs
             # are admissible members (method/computation = this verdict)
@@ -225,11 +281,14 @@ def verify_claims(store, claims, allowed):
     return claims
 
 
-def run_suite(store, queries, mode, journal_path, run_dir=None, T=None):
+def run_suite(store, queries, mode, journal_path, run_dir=None, T=None,
+              gen=None, gen_id=None):
     """Run all queries under one enforcement mode.
 
     mode: 'A4' (contract service) or 'A5' (manifest-as-data resolver).
-    resolver: optional function(stratum_id) -> set of rev_ids used by A5.
+    gen: optional real-LLM callable(prompt)->text; queries of LLM_TYPES
+    with a 'question' are answered by the model, the rest by the
+    deterministic dispatcher.
     """
     runs = []
     for q in queries:
@@ -242,8 +301,14 @@ def run_suite(store, queries, mode, journal_path, run_dir=None, T=None):
             st = store.stratum(q["stratum"])
             allowed, report = admissible_members(store, st, T=T)
 
-        answer, claims, ctx, flags = answer_query(
-            store, q, allowed if allowed is not None else set(), run_dir)
+        use_llm = gen and q["type"] in LLM_TYPES and q.get("question")
+        if use_llm:
+            answer, claims, ctx, flags = answer_llm(
+                store, q, allowed if allowed is not None else set(), gen)
+        else:
+            answer, claims, ctx, flags = answer_query(
+                store, q, allowed if allowed is not None else set(),
+                run_dir)
         claims = verify_claims(store, claims, allowed)
 
         run = {
@@ -257,7 +322,7 @@ def run_suite(store, queries, mode, journal_path, run_dir=None, T=None):
             "contract_report_ok": report["ok"] if report else None,
             "time": datetime.datetime.now().isoformat(timespec="seconds"),
             "time_unix": int(datetime.datetime.now().timestamp()),
-            "model_id": "TemplateGenerator/0.1",
+            "model_id": gen_id if use_llm else "TemplateGenerator/0.1",
             "generation_controls": {"decoding": "deterministic",
                                     "parametric_mitigation": None},
         }

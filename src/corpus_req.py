@@ -188,22 +188,34 @@ def generate():
     queries = [
         {"q_id": "Q1", "type": "entity_text", "stratum": "B1",
          "entity_id": "R-3", "mode": "stratum",
+         "question": "What does requirement R-3 state in the approved "
+                    "configuration B1? Cite the revision id.",
          "gold_rev": "R-3-rev1"},
         {"q_id": "Q2", "type": "entity_text", "stratum": "B2",
          "entity_id": "R-3", "mode": "stratum",
+         "question": "What does requirement R-3 state in the approved "
+                    "configuration B2? Cite the revision id.",
          "gold_rev": "R-3-rev2"},
         {"q_id": "Q3", "type": "verifiers", "stratum": "B1",
          "entity_id": "R-3", "mode": "stratum",
+         "question": "Which test revisions verify requirement R-3 in "
+                    "configuration B1? List revision ids.",
          "gold_revs": ["T-2-rev1"]},
         {"q_id": "Q4", "type": "verifiers", "stratum": "B2",
          "entity_id": "R-3", "mode": "stratum",
+         "question": "Which test revisions verify requirement R-3 in "
+                    "configuration B2? List revision ids.",
          "gold_revs": ["T-2-rev1", "T-8-rev1"]},
         {"q_id": "Q5", "type": "entity_text", "stratum": "B1",
          "entity_id": "R-1", "mode": "stratum",
+         "question": "What does requirement R-1 state in configuration "
+                    "B1? Cite the revision id.",
          "gold_rev": "R-1-rev1",
          "note": "revision-insensitive control: same answer in B1 and B2"},
         {"q_id": "Q6", "type": "config_members", "stratum": "B_counter",
          "mode": "stratum",
+         "question": "Which revisions form the approved configuration "
+                    "B_counter? List revision ids.",
          "gold_revs": ["XA-rev1", "XB-rev1"],
          "note": "counterexample: no latest-as-of restores {a1,b1}"},
         {"q_id": "Q7", "type": "asof_latest", "entity_id": "XA", "t": 5,
