@@ -1,0 +1,1 @@
+EPOCH FRANCE_DIRECTORY: Директорія. period=1795-1799 society_type=Wild eta_lie=0.5399 military_gini=0.15

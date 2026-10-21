@@ -1,0 +1,3 @@
+STRATEGY S-CENTRAL rev1: expand via centralized command hierarchy.
+requires_society_type: Rigid_Hierarchical
+epoch: FRANCE_REVOLUTION

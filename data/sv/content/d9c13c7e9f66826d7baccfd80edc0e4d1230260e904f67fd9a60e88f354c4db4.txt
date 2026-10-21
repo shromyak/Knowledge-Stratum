@@ -1,0 +1,1 @@
+MARKER M-W-FIG: Воєначальник / Ватажок банди [Marker_FigureState] -> Wild

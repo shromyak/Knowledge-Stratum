@@ -1,0 +1,1 @@
+EPOCH FRANCE_THIRD_REPUBLIC: Третя Республіка. period=1870-1940 society_type=Consumer eta_lie=0.3853 military_gini=0.64

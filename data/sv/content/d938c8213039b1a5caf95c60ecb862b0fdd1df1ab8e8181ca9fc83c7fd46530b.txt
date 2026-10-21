@@ -1,0 +1,1 @@
+EPOCH FRANCE_SECOND_EMPIRE: Друга імперія. period=1852-1870 society_type=Rigid_Hierarchical eta_lie=0.827 military_gini=0.689

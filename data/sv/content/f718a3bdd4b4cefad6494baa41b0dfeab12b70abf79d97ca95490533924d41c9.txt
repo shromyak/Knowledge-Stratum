@@ -1,0 +1,1 @@
+EPOCH FRANCE_NAPOLEON: Наполеонівська Франція. period=1799-1815 society_type=Rigid_Hierarchical eta_lie=0.7535 military_gini=0.78

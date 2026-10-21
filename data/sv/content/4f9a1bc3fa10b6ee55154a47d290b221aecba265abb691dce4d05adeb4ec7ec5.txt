@@ -1,0 +1,1 @@
+EPOCH FRANCE_REVOLUTION: Французька Революція. period=1789-1794 society_type=Anarchic eta_lie=0.3025 military_gini=0.06

@@ -1,0 +1,1 @@
+EI-FRANCE_NAPOLEON:instance_of:FRANCE_NAPOLEON-rev1->Rigid_Hierarchical-rev1

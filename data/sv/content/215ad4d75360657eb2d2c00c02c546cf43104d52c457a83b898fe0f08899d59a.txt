@@ -1,0 +1,1 @@
+EPOCH FRANCE_SECOND_REPUBLIC: Друга республіка. period=1848-1852 society_type=Legal eta_lie=0.1663 military_gini=0.637

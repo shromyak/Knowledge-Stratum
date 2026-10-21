@@ -1,0 +1,4 @@
+STRATEGY S-EVID rev1: mobilize via ataman-style coalition.
+requires_society_type: Anarchic
+epoch: FRANCE_REVOLUTION
+needs_marker: M-AN-MAHNO

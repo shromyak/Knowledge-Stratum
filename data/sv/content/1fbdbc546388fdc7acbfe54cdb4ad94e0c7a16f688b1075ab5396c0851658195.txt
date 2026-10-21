@@ -1,0 +1,1 @@
+EPOCH FRANCE_ANCIEN_REGIME: Франція Ancien Régime. period=1643-1789 society_type=Rigid_Hierarchical eta_lie=0.7435 military_gini=0.9
