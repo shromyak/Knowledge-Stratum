@@ -1,0 +1,6 @@
+{"gold_verdict": "contradicts", "mode": "stratum", "note": "centralized strategy vs Anarchic epoch frame", "q_id": "QS1", "strategy_rev": "S-CENTRAL-rev1", "stratum": "SV_B1", "type": "strategy_verdict"}
+{"gold_verdict": "consistent", "mode": "stratum", "q_id": "QS2a", "strategy_rev": "S-ORDER-rev1", "stratum": "SV_B1", "type": "strategy_verdict"}
+{"gold_verdict": "contradicts", "mode": "stratum", "note": "same data, taxonomy rev2: T5 reclassification flips the verdict", "q_id": "QS2b", "strategy_rev": "S-ORDER-rev1", "stratum": "SV_B2", "type": "strategy_verdict"}
+{"gold_verdict": "insufficient evidence", "mode": "stratum", "note": "required marker has no source (Section 8.5 control)", "q_id": "QS3", "strategy_rev": "S-EVID-rev1", "stratum": "SV_B1", "type": "strategy_verdict"}
+{"entity_id": "M-AN-RETRO", "gold_revs": [], "mode": "as_available_at_T", "note": "retrospective marker (available_at=10) excluded at T=5", "q_id": "QS4", "stratum": "SV_B2", "t": 5, "type": "availability"}
+{"gold_revs": ["EI-FRANCE_RESTORATION-rev2", "M-AN-RETRO-rev1"], "mode": "stratum", "note": "membership check: taxonomy rev2 members present", "q_id": "QS5", "stratum": "SV_B2", "type": "config_members"}
