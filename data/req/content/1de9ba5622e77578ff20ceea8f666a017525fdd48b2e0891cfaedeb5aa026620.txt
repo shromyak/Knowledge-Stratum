@@ -1,0 +1,1 @@
+REQ R-6 rev1: the system shall maintain consistency of configuration item 6 across releases.
