@@ -1,0 +1,44 @@
+{
+  "stratum_id": "B1",
+  "contract_rev": "C-req-1",
+  "checks": [
+    {
+      "check": "members_exist",
+      "ok": true,
+      "code": null,
+      "detail": []
+    },
+    {
+      "check": "hash_integrity",
+      "ok": true,
+      "code": null,
+      "detail": []
+    },
+    {
+      "check": "member_types",
+      "ok": true,
+      "code": null,
+      "detail": []
+    },
+    {
+      "check": "edge_endpoints",
+      "ok": true,
+      "code": null,
+      "detail": []
+    },
+    {
+      "check": "temporal_constraints",
+      "ok": true,
+      "code": null,
+      "detail": [],
+      "unknown_availability": []
+    },
+    {
+      "check": "contradiction_rules",
+      "ok": true,
+      "code": null,
+      "detail": []
+    }
+  ],
+  "ok": true
+}

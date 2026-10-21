@@ -1,0 +1,74 @@
+{
+  "parity": {
+    "queries": 10,
+    "divergent": 0,
+    "parity": true,
+    "detail": [
+      {
+        "q_id": "Q1",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q2",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q3",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q4",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q5",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q6",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q7",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q8",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q9",
+        "same_context": true,
+        "same_eval": true
+      },
+      {
+        "q_id": "Q10",
+        "same_context": true,
+        "same_eval": true
+      }
+    ]
+  },
+  "metrics_A4": {
+    "fact_correctness": 1.0,
+    "membership_violations_flagged": 1,
+    "evidential_support": 1.0,
+    "correct_abstention": 1.0,
+    "runs": 10
+  },
+  "metrics_A5": {
+    "fact_correctness": 1.0,
+    "membership_violations_flagged": 1,
+    "evidential_support": 1.0,
+    "correct_abstention": 1.0,
+    "runs": 10
+  },
+  "notes": "A5-lite carrier: manifest rows in SQLite (git-commit analogue of DVC/LakeFS per Section 2.3). Parity expected for membership; divergence in cost only."
+}
