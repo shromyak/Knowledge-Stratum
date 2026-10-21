@@ -1,0 +1,1 @@
+TEST T-7: verification procedure for requirement R-2.

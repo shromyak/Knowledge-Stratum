@@ -1,0 +1,1 @@
+E-sat-1:satisfies:A-1-rev1->R-1-rev1

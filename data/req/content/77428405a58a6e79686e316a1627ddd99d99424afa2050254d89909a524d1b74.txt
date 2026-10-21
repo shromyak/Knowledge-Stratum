@@ -1,0 +1,1 @@
+TEST T-8: verification procedure for requirement R-3.

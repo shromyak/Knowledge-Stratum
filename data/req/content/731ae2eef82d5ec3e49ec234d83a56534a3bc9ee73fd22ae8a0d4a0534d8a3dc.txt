@@ -1,0 +1,1 @@
+REQ R-5 rev1: the system shall maintain consistency of configuration item 5 across releases.

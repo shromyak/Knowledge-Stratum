@@ -1,0 +1,1 @@
+TEST T-4: verification procedure for requirement R-5.

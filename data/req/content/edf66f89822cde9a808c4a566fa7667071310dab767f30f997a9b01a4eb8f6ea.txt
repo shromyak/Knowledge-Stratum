@@ -1,0 +1,1 @@
+ARCH A-1: component implementing requirement R-1.
