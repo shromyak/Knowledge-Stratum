@@ -1,0 +1,10 @@
+{"entity_id": "R-3", "gold_rev": "R-3-rev1", "mode": "stratum", "q_id": "Q1", "stratum": "B1", "type": "entity_text"}
+{"entity_id": "R-3", "gold_rev": "R-3-rev2", "mode": "stratum", "q_id": "Q2", "stratum": "B2", "type": "entity_text"}
+{"entity_id": "R-3", "gold_revs": ["T-2-rev1"], "mode": "stratum", "q_id": "Q3", "stratum": "B1", "type": "verifiers"}
+{"entity_id": "R-3", "gold_revs": ["T-2-rev1", "T-8-rev1"], "mode": "stratum", "q_id": "Q4", "stratum": "B2", "type": "verifiers"}
+{"entity_id": "R-1", "gold_rev": "R-1-rev1", "mode": "stratum", "note": "revision-insensitive control: same answer in B1 and B2", "q_id": "Q5", "stratum": "B1", "type": "entity_text"}
+{"gold_revs": ["XA-rev1", "XB-rev1"], "mode": "stratum", "note": "counterexample: no latest-as-of restores {a1,b1}", "q_id": "Q6", "stratum": "B_counter", "type": "config_members"}
+{"entity_id": "XA", "gold_rev": "XA-rev2", "mode": "asof", "note": "temporal slice returns a2 -- differs from B_counter", "q_id": "Q7", "t": 5, "type": "asof_latest"}
+{"gold_answer": "no record exists", "mode": "record", "note": "absence of archive must not be reconstructed", "q_id": "Q8", "stratum": "B1", "t": 1, "type": "record_query"}
+{"entity_id": "T-8", "gold_revs": [], "mode": "as_available_at_T", "note": "T-8 available_at=4 excluded in 'as available at T=2'", "q_id": "Q9", "stratum": "B2", "t": 2, "type": "availability"}
+{"extra_rev": "R-3-rev2", "gold_flag": "MEMBERSHIP_VIOLATION", "mode": "stratum", "note": "injecting a genuine but non-member revision is flagged", "q_id": "Q10", "stratum": "B1", "type": "mixed_context"}
